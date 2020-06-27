@@ -4,11 +4,16 @@ import (
 	"fmt"
 
 	"github.com/miekg/dns"
+	"golang.org/x/net/proxy"
 )
 
 func Listen() {
-	server := &dns.Server{Addr: ":5300", Net: "udp"}
-	dns.HandleFunc(".", handleRequest)
+	serveMux := dns.NewServeMux()
+	serveMux.HandleFunc(".", func(w dns.ResponseWriter, req *dns.Msg) {
+		handleRequest(w, req)
+	})
+
+	server := &dns.Server{Addr: ":5300", Net: "udp", Handler: serveMux}
 	server.ListenAndServe()
 
 }
@@ -19,19 +24,24 @@ func handleRequest(w dns.ResponseWriter, r *dns.Msg) {
 	fmt.Printf("%#v\n\n", r)
 	if r.MsgHdr.Opcode == dns.OpcodeQuery {
 		if len(r.Question) > 0 {
-			qs := r.Question[0]
-			if qs.Name == "kushaldas.in." {
-				in, err := dns.NewRR("kushaldas.in. 14400 IN A 51.159.23.159")
-				if err == nil {
-					m.Answer = append(m.Answer, in)
-				}
-			} else {
-
-				in, err := dns.Exchange(r, "1.1.1.1:53")
-				if err == nil {
-					fmt.Printf("%#v\n\n", in)
-					m.Answer = append(m.Answer, in.Answer...)
-				}
+			dialer, _ := proxy.SOCKS5("tcp", "127.0.0.1:9050", nil, proxy.Direct)
+			conn, err := dialer.Dial("tcp", "1.1.1.1:53")
+			if err != nil {
+				fmt.Println("Error in connecting to server", err)
+				return
+			}
+			dnsConn := &dns.Conn{Conn: conn}
+			if err = dnsConn.WriteMsg(r); err != nil {
+				w.WriteMsg(m)
+				fmt.Println("Error ", err)
+				return
+			}
+			resp, err := dnsConn.ReadMsg()
+			if err == nil {
+				fmt.Printf("%#v\n\n", resp)
+				m.Answer = append(m.Answer, resp.Answer...)
+				m.Ns = append(m.Ns, resp.Ns...)
+				m.Extra = append(m.Extra, resp.Extra...)
 			}
 		}
 	}
