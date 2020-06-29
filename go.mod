@@ -1,4 +1,4 @@
-module github.com/kushaldas/exampledns
+module github.com/kushaldas/dns-over-tor
 
 go 1.14
 
