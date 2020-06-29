@@ -1,4 +1,4 @@
-module github.com/kushaldas/dns-over-tor
+module github.com/kushaldas/dns-tor-proxy
 
 go 1.14
 
