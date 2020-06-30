@@ -3,7 +3,7 @@
 **Do not use it in production, not yet ready for that.**
 
 This is a tool to transparently do TCP DNS calls over Tor provided socks5 proxy running at
-port **9050**. Currently the code will start listening to port **5300**.
+port **9050**.
 
 
 ## How to build?
