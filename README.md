@@ -94,7 +94,10 @@ wildcard.fedoraproject.org. 7	IN	A	8.43.85.67
 ;; MSG SIZE  rcvd: 455
 ```
 
-Remember that the code will evolve a lot in the coming days.
+## systemd service file
+
+If you copy the executable in `/usr/bin` directory, the source code also has an
+example **systemd** service file.
 
 
 ## LICENSE:   GPLv3+

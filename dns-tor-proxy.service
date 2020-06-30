@@ -1,0 +1,16 @@
+[Unit]
+Description=Server to do DNS calls over Tor SOCKS5 proxy
+Documentation=https://github.com/kushldas/dns-tor-proxy/
+After=network.target
+
+[Service]
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart=/usr/bin/dns-tor-proxy
+LimitNOFILE=1048576
+Restart=always
+RestartSec=3
+Type=simple
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
