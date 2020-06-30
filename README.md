@@ -1,7 +1,5 @@
 # dns-tor-proxy
 
-**Do not use it in production, not yet ready for that.**
-
 This is a tool to transparently do DNS calls over Tor provided SOCKS5 proxy
 running at port **9050**.
 
