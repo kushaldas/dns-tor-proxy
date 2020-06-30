@@ -2,27 +2,33 @@
 
 **Do not use it in production, not yet ready for that.**
 
-This is a tool to transparently do TCP DNS calls over Tor provided socks5 proxy running at
-port **9050**.
+This is a tool to transparently do DNS calls over Tor provided SOCKS5 proxy
+running at port **9050**.
 
 
 ## How to build?
 
-Have the latest *go* downloaded and extracted in your home directory. I have the following in the `~/.bashrc` file.
+Have the latest *go* downloaded and extracted in your home directory. I have
+the following in the `~/.bashrc` file.
 
 ```
 export GOPATH=~/gocode/
 export GOROOT=~/go/
 ```
 
-And then checkout the source at `~/gocode/src/github.com/kushaldas/dns-tor-proxy` directory. Get inside of that
+And then checkout the source at
+`~/gocode/src/github.com/kushaldas/dns-tor-proxy` directory. Get inside of that
 directory and use the following command to build.
 
 ```
-go build github.com/kushaldas/dns-tor-proxy/cmd/dns-tor-proxy
+make build
 ```
 
-This should create the executable `dns-tor-proxy` in the source directory.
+This should create the executable `dns-tor-proxy` in the source directory. It
+also calls `sudo setcap` to allow the capability required to bind to the port
+**53** (default port for DNS).
+
+Just running the **make** command will print you all the available options.
 
 
 ## Running and testing the tool?
