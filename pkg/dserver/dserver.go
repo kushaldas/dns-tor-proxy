@@ -22,7 +22,7 @@ func Listen(port *int, serveraddr, proxyaddr *string) {
 	server := &dns.Server{Addr: fmt.Sprintf(":%d", *port), Net: "udp", Handler: serveMux}
 	err := server.ListenAndServe()
 	if err!= nil {
-		fmt.Println(err)
+		fmt.Fprintf(os.Stderr, "Error while starting the server: %s\n", err)
 		os.Exit(127)
 	}
 
@@ -33,16 +33,19 @@ func handleRequest(w dns.ResponseWriter, r *dns.Msg) {
 	m.SetReply(r)
 	if r.MsgHdr.Opcode == dns.OpcodeQuery {
 		if len(r.Question) > 0 {
-			dialer, _ := proxy.SOCKS5("tcp", proxyurl, nil, proxy.Direct)
+			dialer, err := proxy.SOCKS5("tcp", proxyurl, nil, proxy.Direct)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error connecting to local proxy: %s\n", err)
+			}
 			conn, err := dialer.Dial("tcp", serverurl)
 			if err != nil {
-				fmt.Println("Error in connecting to server", err)
+				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 				return
 			}
 			dnsConn := &dns.Conn{Conn: conn}
 			if err = dnsConn.WriteMsg(r); err != nil {
 				w.WriteMsg(m)
-				fmt.Println("Error ", err)
+				fmt.Fprintf(os.Stderr, "Error while talking to the server %s\n", err)
 				return
 			}
 			resp, err := dnsConn.ReadMsg()

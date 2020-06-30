@@ -29,6 +29,6 @@ func main(){
 		fmt.Println("0.1.0")
 		os.Exit(0)
 	}
-	fmt.Println(*port, *server, *proxy)
+	fmt.Printf("Starting server at port %d wtih remote server %s and local proxy at %s\n", *port, *server, *proxy)
 	dserver.Listen(port, server, proxy);
 }
