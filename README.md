@@ -27,10 +27,29 @@ This should create the executable `dns-tor-proxy` in the source directory.
 
 ## Running and testing the tool?
 
-The following command will start the listening at port *5300*
+You can pass **-h** or **--help** to the command to see the help message.
 
 ```
-./dns-tor-proxy
+./dns-tor-proxy -h
+
+Usage of ./dns-tor-proxy:
+  -h, --help            Prints the help message and exists.
+      --port int        Port on which the tool will listen. (default 53)
+      --proxy string    The Tor SOCKS5 proxy to connect locally,  IP:PORT format. (default "127.0.0.1:9050")
+      --server string   The DNS server to connect IP:PORT format. (default "1.1.1.1:53")
+  -v, --version         Prints the version and exists.
+Make sure that your Tor process is running and has a SOCKS proxy enabled.
+```
+
+By default it connects to **127.0.0.1:9050**, which is the default IP and port
+number where the Tor process is listening in. It uses **1.1.1.1** as the
+default remote DNS server.
+
+If you want to start the server at port **5300** on localhost and use
+**1.1.1.1** as the remote DNS server, you can execute the following command.
+
+```
+./dns-tor-proxy --port 5300
 ```
 
 To verify, from another terminal you can use the *dig* command.
