@@ -1,7 +1,10 @@
 # dns-tor-proxy
 
 This is a tool to transparently do DNS calls over Tor provided SOCKS5 proxy
-running at port **9050**.
+running at port **9050**. It can also do DNS over HTTPS (DoH) calls via same
+Tor proxy.
+
+**NOTE:** Please remember that just using this tool will not provide any extra privacy to you.
 
 
 ## How to build?
@@ -34,9 +37,8 @@ Just running the **make** command will print you all the available options.
 You can pass **-h** or **--help** to the command to see the help message.
 
 ```
-./dns-tor-proxy -h
-
 Usage of ./dns-tor-proxy:
+      --doh             Use DoH servers as upstream.
   -h, --help            Prints the help message and exists.
       --port int        Port on which the tool will listen. (default 53)
       --proxy string    The Tor SOCKS5 proxy to connect locally,  IP:PORT format. (default "127.0.0.1:9050")
@@ -92,6 +94,15 @@ wildcard.fedoraproject.org. 7	IN	A	8.43.85.67
 ;; MSG SIZE  rcvd: 455
 ```
 
+
+## DoH support
+
+You can use DoH servers as upstream by using **--doh** flag, right now it defaults to <https://cloudflare-dns.com/dns-query>.
+
+```
+./dns-tor-proxy --port 5300 --doh
+```
+
 ## systemd service file
 
 If you copy the executable in `/usr/bin` directory, the source code also has an
@@ -99,3 +110,8 @@ example **systemd** service file.
 
 
 ## LICENSE:   GPLv3+
+
+The project includes certain source code files from
+<https://github.com/m13253/dns-over-https> which are under MIT license and
+copyright is of the respective owners mentioned in the source code files.
+
