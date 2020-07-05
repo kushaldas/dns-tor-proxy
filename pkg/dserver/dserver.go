@@ -10,33 +10,44 @@ import (
 
 var serverurl string
 var proxyurl string
+var dclient *Client
 
-func Listen(port *int, serveraddr, proxyaddr *string) {
+func Listen(port *int, serveraddr, proxyaddr *string, client *Client, doh *bool) {
 	serverurl = *serveraddr
 	proxyurl = *proxyaddr
+	// Here we will replicate the doh-client from amazing 13253
+	dclient = client
+
 	serveMux := dns.NewServeMux()
 	serveMux.HandleFunc(".", func(w dns.ResponseWriter, req *dns.Msg) {
-		handleRequest(w, req)
+		handleRequest(w, req, doh)
 	})
 
 	server := &dns.Server{Addr: fmt.Sprintf(":%d", *port), Net: "udp", Handler: serveMux}
 	err := server.ListenAndServe()
-	if err!= nil {
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while starting the server: %s\n", err)
 		os.Exit(127)
 	}
 
 }
 
-func handleRequest(w dns.ResponseWriter, r *dns.Msg) {
+func handleRequest(w dns.ResponseWriter, r *dns.Msg, doh *bool) {
 	m := new(dns.Msg)
 	m.SetReply(r)
 	if r.MsgHdr.Opcode == dns.OpcodeQuery {
 		if len(r.Question) > 0 {
+			// In case of DoH based requests, we use the code in the
+			// following block.
+			if *doh {
+				dclient.handlerFunc(w, r, true)
+				return
+			}
 			dialer, err := proxy.SOCKS5("tcp", proxyurl, nil, proxy.Direct)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error connecting to local proxy: %s\n", err)
 			}
+			// setup the http client
 			conn, err := dialer.Dial("tcp", serverurl)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
