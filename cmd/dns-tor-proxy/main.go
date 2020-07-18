@@ -17,7 +17,7 @@ func main(){
 	var help *bool = pflag.BoolP("help", "h", false, "Prints the help message and exists.")
 	var version *bool = pflag.BoolP("version", "v", false, "Prints the version and exists.")
 	var doh *bool = pflag.Bool("doh", false, "Use DoH servers as upstream.")
-	var dohserver *string = pflag.String("dohaddress", "https://mozilla.cloudflare-dns.com/dns-query", "The DoH server address.")
+	var dohserver *string = pflag.String("dohaddress", "https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/dns-query", "The DoH server address.")
 	pflag.Usage = func () {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
 		pflag.PrintDefaults()
@@ -33,7 +33,7 @@ func main(){
 		os.Exit(0)
 	}
 	conf := &config.Config{}
-	//conf.Upstream.UpstreamGoogle = []config.UpstreamDetail{{URL: "https://mozilla.cloudflare-dns.com/dns-query", Weight: 50}}
+	//conf.Upstream.UpstreamGoogle = []config.UpstreamDetail{{URL: "https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/dns-query", Weight: 50}}
 	conf.Upstream.UpstreamIETF = []config.UpstreamDetail{{URL: *dohserver, Weight: 60}}
 	conf.Other.Timeout = 10
 	conf.Other.NoECS = true

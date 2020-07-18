@@ -39,7 +39,7 @@ You can pass **-h** or **--help** to the command to see the help message.
 ```
 Usage of ./dns-tor-proxy:
       --doh                 Use DoH servers as upstream.
-      --dohaddress string   The DoH server address. (default "https://mozilla.cloudflare-dns.com/dns-query")
+      --dohaddress string   The DoH server address. (default "https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/dns-query")
   -h, --help                Prints the help message and exists.
       --port int            Port on which the tool will listen. (default 53)
       --proxy string        The Tor SOCKS5 proxy to connect locally, IP:PORT format. (default "127.0.0.1:9050")
@@ -102,7 +102,7 @@ wildcard.fedoraproject.org. 1	IN	RRSIG	A 5 3 60 20200801204312 20200702204312 77
 
 ## DoH support
 
-You can use DoH servers as upstream by using **--doh** flag, right now it defaults to <https://mozilla.cloudflare-dns.com/dns-query>.
+You can use DoH servers as upstream by using **--doh** flag, right now it defaults to <https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/dns-query>.
 
 ```
 ./dns-tor-proxy --port 5300 --doh
