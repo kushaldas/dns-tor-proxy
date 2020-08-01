@@ -29,7 +29,7 @@ func main(){
 		os.Exit(0)
 	}
 	if *version == true {
-		fmt.Println("0.2.0")
+		fmt.Println("0.3.0")
 		os.Exit(0)
 	}
 	conf := &config.Config{}

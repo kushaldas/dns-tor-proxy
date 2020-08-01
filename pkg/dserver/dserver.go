@@ -23,6 +23,12 @@ func Listen(port *int, serveraddr, proxyaddr *string, client *Client, doh *bool)
 		handleRequest(w, req, doh)
 	})
 
+	// Here we are starting a TCP server
+	go func(){
+		server := &dns.Server{Addr: fmt.Sprintf(":%d", *port), Net: "tcp", Handler: serveMux}
+		server.ListenAndServe()
+	}()
+	// Here we are starting a UDP server
 	server := &dns.Server{Addr: fmt.Sprintf(":%d", *port), Net: "udp", Handler: serveMux}
 	err := server.ListenAndServe()
 	if err != nil {
